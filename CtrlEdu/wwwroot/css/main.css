@@ -1,0 +1,24 @@
+﻿.tag {
+    display: inline-block;
+    padding: 7px 14px;
+    color: #fff;
+    border-radius: 7px;
+    margin-right: 7px;
+    font-size: 14px
+}
+    .tag.frontend {
+        background-color: #ff6600; /
+    }
+
+    .tag.backend {
+        background-color: #007bff;
+    }
+
+.large-font {
+    font-size: 10px; /* Adjust the size as needed */
+}
+#myButton {
+    position: absolute;
+    top: 100px;
+    left: 200px;
+}

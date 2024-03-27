@@ -1,0 +1,24 @@
+﻿@model EnrollmentModel
+
+@{
+    ViewData["Title"] = "Delete Enrollment";
+}
+
+<div class="row text">
+    <div class="col-md-8 offset-2">
+        <p>
+            <h1>
+                Delete Confirmation for @Model.User.UserName
+            </h1>
+        </p>
+        <div class="form-group">
+            <form asp-action="DeEnroll" asp-controller="Enrollment">
+                <input type="hidden" asp-for="UserID" />
+                <input type="hidden" asp-for="CourseID" />
+                <input type="hidden" asp-for="EnrollmentDate" />
+                <input type="submit" value="Confirm" class="btn btn-danger float-right" />
+            </form>
+           @*  <a class="btn btn-outline-secondary" asp-action="Index">Cancel</a> *@
+        </div>
+    </div>
+</div>

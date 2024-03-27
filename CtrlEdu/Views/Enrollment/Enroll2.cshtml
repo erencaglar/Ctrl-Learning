@@ -1,0 +1,35 @@
+﻿@model EnrollmentModel // Assuming EnrollmentModel is the model for enrollment
+
+<form method="post">
+    <div class="form-group">
+        <label for="UserID">Select User:</label>
+        <select class="form-control" name="UserID" id="UserID">
+            <option value="">-- Select User --</option>
+            @foreach (var user in ViewBag.Users)
+            {
+                if (user.Rol == "Student")
+                {
+                    <option value="@user.UserID">@user.UserName</option>
+                }
+                
+            }
+        </select>
+    </div>
+
+@*     <div class="form-group">
+        <label for="CourseID">Select Course:</label>
+        <select class="form-control" name="CourseID" id="CourseID">
+            <option value="">-- Select Course --</option>
+            @foreach (var course in ViewBag.Courses)
+            {
+                <option value="@course.CourseID">@course.Title</option>
+            }
+        </select>
+    </div> *@
+
+
+    <button type="submit" class="btn btn-primary">Enroll</button>
+</form>
+
+
+

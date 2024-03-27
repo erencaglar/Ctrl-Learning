@@ -1,0 +1,111 @@
+﻿@model CtrlEdu.Models.UserModel // Use UserModel for sign-up
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Sign Up</title>
+    <style>
+        /* Add your custom CSS styles here to make the page prettier */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        form {
+            background-color: #ffffff;
+            width: 300px;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px 0px #ccc;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+            button:hover {
+                background-color: #0056b3;
+            }
+
+        label.error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <form asp-controller="Access" asp-action="SignUp" method="post">
+        <h1>Sign Up</h1>
+
+        <div class="form-group">
+            <input type="text" placeholder="Name" asp-for="UserName" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+            <input type="email" placeholder="Email" asp-for="Email" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+            <input type="password" placeholder="Password" asp-for="Password" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+            <select asp-for="Rol" class="form-control">
+                <option value="Student">Student</option>
+                <option value="Teacher">Teacher</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Sign Up</button>
+
+        @if (ViewData["ValidateMessage"] != null)
+        {
+            <br />
+            <br />
+            <label class="error">@ViewData["ValidateMessage"]</label>
+        }
+    </form>
+
+    <!-- Include jQuery and jQuery Validate scripts for client-side validation -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+﻿@model IEnumerable<CourseModel>
+@using System.Security.Claims
+@{
+    var rol = User.FindFirst(ClaimTypes.Role)?.Value;
+}
+
+@using System.Security.Claims
+@{
+    var isAuthenticated = User.Identity.IsAuthenticated;
+}
+<link rel="stylesheet" type="text/css" href="~/css/main.css">
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@* <section class="jumbotron text-center">
+    <div class="container">
+        <h1 class="jumbotron-heading">Avaliable Courses</h1>
+        <p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don't simply skip over it entirely.</p>
+        <p>
+            <a href="#" class="btn btn-primary my-2">Main call to action</a>
+            <a href="#" class="btn btn-secondary my-2">Secondary action</a>
+        </p>
+    </div>
+</section>
+
+ *@
+<section class="jumbotron text-center">
+    <div class="container">
+        <h1 class="jumbotron-heading">Avaliable Courses</h1>
+        <p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don't simply skip over it entirely.</p>
+    </div>
+</section>
+
+
+@if (@rol == "admin" || @rol == "Teacher")
+{
+    <div class="text-white" >
+        <a asp-controller="Course" asp-action="Create" class="btn btn-success"><i class="bi bi-plus-circle"></i>Add New Course</a>
+    </div>
+}
+
+
+<div class="album py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-4">
+                    <div class="card mb-4 box-shadow" style="width: 100%;">
+                        <img class="card-img-top" src="@item.ImageURL" alt="Card image cap">
+                        <div class="card-body" style="max-height: 800px; object-fit: cover;">
+                            <p class="card-text">@item.Title</p>
+                            <p class="card-text">@item.Description</p>
+                            <span class="tag @item.Category">@item.Category</span>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <a asp-controller="Course" asp-action="Detail" asp-route-id="@item.CourseID" type="button" class="btn btn-sm btn-outline-secondary">View</a>
+
+                                    @if (@rol == "admin" || @rol == "Teacher")
+                                    {
+                                        <a class="btn btn-danger" asp-controller="Course" asp-action="Delete" asp-route-id="@item.CourseID"> <i class="bi bi-trash">Delete </i></a>
+
+                                        <a class="btn btn-outline-primary" asp-controller="Course" asp-action="Edit" asp-route-id="@item.CourseID"> <i class="bi bi-pencil-square">Edit </i></a>
+                                    }
+                                    else
+                                    {
+                                        //student
+                                    }
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>

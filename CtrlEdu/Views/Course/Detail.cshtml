@@ -1,0 +1,176 @@
+﻿﻿@using System.Security.Claims;
+@model CourseModel
+@using System.Security.Claims
+@{
+    var rol = User.FindFirst(ClaimTypes.Role)?.Value;
+}
+
+@using System.Security.Claims
+@{
+    var isAuthenticated = User.Identity.IsAuthenticated;
+}
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<style>
+    .orange-button {
+        background-color: orange;
+        border-color: orange
+        color: white; /* You can adjust the text color to be visible on the orange background */
+        outline: none;
+    }
+
+    .green-button {
+        background-color: green;
+        border-color: green; /* Set the border color to green */
+        color: white; /* Set the text color to white */
+        outline: none; /* Remove the blue focus/active state outline */
+    }
+</style>
+
+<link rel="stylesheet" type="text/css" href="~/css/main.css">
+<!-- eğer kullanıcı zaten kayıtlıysa enroll butonunu gizleme-->
+@if (User.FindFirst(ClaimTypes.NameIdentifier)?.Value != null && Model.Users.FirstOrDefault(u => u.UserID == int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value)) == null)
+{
+
+    @if (@rol == "Student")
+    {
+        <div class="d-flex justify-content-end">
+            <a type="button" class="btn btn-primary" href="@Url.Action("Enroll", "User", new {id = Model.CourseID})">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square orange-button " viewBox="0 0 16 16">
+                    <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                </svg>
+                Enroll Course
+            </a>
+        </div>
+    }
+    else
+    {
+        //admin and teacher
+    }
+
+}
+<div class="text-white d-flex justify-content-end align-items-start">
+    @if (User.IsInRole("Teacher") || User.IsInRole("admin"))
+    {
+        <a asp-controller="Enrollment" asp-action="Index" asp-route-courseId="@Model.CourseID" class="btn btn-primary orange-button">Enrollment List</a>
+    }
+</div>
+<div class="container" style="height: 1000px;">
+
+    <!-- Portfolio Item Heading -->
+    <h1 class="my-4">
+        @Model.Title
+        <span class="tag @Model.Category">@Model.Category</span>
+        @* <small>@Model.Category</small> *@
+    </h1>
+
+    <!-- Portfolio Item Row -->
+      <div class="row">
+
+        <div class="col-md-8">
+            <img class="img-fluid" src="@Model.ImageURL" width="600" height="600" alt="">
+        </div>
+
+        <div class="col-md-4">
+            
+            <p>@Model.Description</p>
+            
+
+        </div>
+        <div>
+            <h3 class="my-3">Assignments</h3>
+            <!-- kullanıcı kursa kayıtlı değilse ifi -->
+            @if (User.FindFirst(ClaimTypes.NameIdentifier)?.Value != null && Model.Users.FirstOrDefault(u => u.UserID == int.Parse(@User.FindFirst(ClaimTypes.NameIdentifier)?.Value)) == null)
+            {
+                foreach (var assignment in Model.Assignments)
+                {
+                    <li>@assignment.Title</li>
+
+
+                }
+            }
+            else
+            {
+                foreach (var assignment in ViewBag.CurrentUserAssignments)
+                {
+                    <div>
+                        <h6>@assignment.Title</h6>
+                       
+
+                        <p>@assignment.Description</p>
+                 </div>
+
+                    if (assignment.Status)
+                    {
+                        <div><h5 style="color: green;">Assignment "@assignment.Title" done!</h5></div>
+                    }
+                    else
+                    {
+                        <div class="text-white">
+                            <a type="button" class="btn btn-primary green-button" href="@Url.Action("Check", "User", new {id = assignment.StudentCourseAssignmentID})">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square green-button" viewBox="0 0 16 16">
+                                <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                            </svg>
+                            Check Assignment
+                        </a>
+                        </div>
+                    }
+                }
+            }
+            <div class="text-white d-flex justify-content-end align-items-start">
+            @if (User.FindFirst(ClaimTypes.NameIdentifier)?.Value != null && Model.InstructorID == int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value))
+            {
+                    <a type="button" class="btn btn-primary green-button" href="@Url.Action("Create", "Assignment", new {id = Model.CourseID})">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus green-button " viewBox="0 0 16 16">
+                        <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                    </svg>
+                    Add Assignment
+                </a>
+            }
+            </div>
+        </div>
+
+    </div>
+  
+    <!-- /.row -->
+    <!-- Related Projects Row -->
+@*     <h3 class="my-4">Related Projects</h3>
+
+    <div class="row">
+
+        <div class="col-md-3 col-sm-6 mb-4">
+            <a href="#">
+                <img class="img-fluid" src="https://via.placeholder.com/500x300" alt="">
+            </a>
+        </div>
+
+        <div class="col-md-3 col-sm-6 mb-4">
+            <a href="#">
+                <img class="img-fluid" src="https://via.placeholder.com/500x300" alt="">
+            </a>
+        </div>
+
+        <div class="col-md-3 col-sm-6 mb-4">
+            <a href="#">
+                <img class="img-fluid" src="https://via.placeholder.com/500x300" alt="">
+            </a>
+        </div>
+
+        <div class="col-md-3 col-sm-6 mb-4">
+            <a href="#">
+                <img class="img-fluid" src="https://via.placeholder.com/500x300" alt="">
+            </a>
+        </div>
+
+    </div>  *@
+    <!-- /.row -->
+
+</div>
+<!-- /.container --> 
